@@ -1,7 +1,3 @@
-다음은 프로젝트명을 **호크아이(Hawkeye)**로 변경한 최종 README입니다.
-
----
-
 # **Hawkeye - Image Overlay Comparison Tool**
 
 ## **프로젝트 설명**
