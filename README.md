@@ -24,32 +24,38 @@ HTML의 `<head>` 또는 `<body>` 태그 안에 라이브러리 2줄만 추가하
 
 ### 2.2 옵션 설정
 
-호크아이는 전역, 도메인, PMS 환경별로 노출 여부를 설정할 수 있습니다.
+호크아이는 전역, 도메인, IP 대역, PMS 환경별로 노출 여부를 설정할 수 있습니다.
 
 ```javascript
 // 기본 설정 예시
 HawkeyeOverlayTool.initialize({
-  // 전역 활성화 여부
-  enabled: true,
+ // 전역 활성화 여부
+ enabled: true,
 
-  // 도메인별 활성화 설정
-  domains: {
-    'pms.inseq.co.kr': true,
-    'dev.inseq.co.kr': true,
-    'localhost': true
-  },
+ // 도메인별 활성화 설정
+ domains: {
+   'pms.inseq.co.kr': true,
+   'dev.inseq.co.kr': true,
+   'localhost': true
+ },
 
-  // PMS 환경 설정
-  pms: {
-    enabled: true,
-    domain: 'pms.inseq.co.kr',
-    branches: {
-      'master': false,     // master 브랜치 비활성화
-      'develop': true,     // develop 브랜치 활성화
-      'feature/*': true,   // feature/ 로 시작하는 브랜치 활성화
-      'hotfix/*': true     // hotfix/ 로 시작하는 브랜치 활성화
-    }
-  }
+ // IP 대역별 활성화 설정
+ ipRanges: [
+   '192.168.',  // 192.168.x.x 대역 활성화
+   '10.',       // 10.x.x.x 대역 활성화
+ ],
+
+ // PMS 환경 설정
+ pms: {
+   enabled: true,
+   domain: 'pms.inseq.co.kr',
+   branches: {
+     'master': false,     // master 브랜치 비활성화
+     'develop': true,     // develop 브랜치 활성화
+     'feature/*': true,   // feature/ 로 시작하는 브랜치 활성화
+     'hotfix/*': true     // hotfix/ 로 시작하는 브랜치 활성화
+   }
+ }
 });
 ```
 

@@ -10,6 +10,12 @@ export const DefaultConfig = {
     '127.0.0.1': true
   },
 
+  // IP 대역 설정 추가
+  ipRanges: [
+    '192.168.',  // 192.168.x.x
+    // '10.',       // 10.x.x.x
+  ],
+
   // PMS 환경 설정
   pms: {
     enabled: true,

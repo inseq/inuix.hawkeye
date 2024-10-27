@@ -60,24 +60,34 @@ export class VisibilityManager {
   }
 
   checkDomain() {
-    const { domains } = this.config;
-    if (!domains || Object.keys(domains).length === 0) {
-      return true; // 도메인 설정이 없으면 모든 도메인 허용
+    const { domains, ipRanges } = this.config;
+
+    // IP 대역 체크
+    if (ipRanges && ipRanges.length > 0) {
+      // 문자열 패턴을 정규식으로 변환하여 체크
+      const isInAllowedRange = ipRanges.some(range => {
+        const regexPattern = range.replace(/\./g, '\\.') + '.*';
+        return new RegExp(`^${regexPattern}`).test(this.currentDomain);
+      });
+      if (isInAllowedRange) return true;
     }
 
-    // 현재 도메인에 대한 설정 확인
+    // 기존 도메인 체크 로직
+    if (!domains || Object.keys(domains).length === 0) {
+      return true;
+    }
+
     if (domains[this.currentDomain] !== undefined) {
       return domains[this.currentDomain];
     }
 
-    // 상위 도메인 확인
     for (const [domain, enabled] of Object.entries(domains)) {
       if (this.currentDomain.endsWith(`.${domain}`)) {
         return enabled;
       }
     }
 
-    return true; // 설정되지 않은 도메인은 기본적으로 허용
+    return true;
   }
 
   checkUrlPattern() {
