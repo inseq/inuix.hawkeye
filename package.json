@@ -1,0 +1,26 @@
+{
+  "name": "inuix.hawkeye",
+  "version": "1.0.0",
+  "description": "이 플러그인은 웹 페이지 상에서 이미지 오버레이 기능을 제공하여\r 퍼블리싱 결과물과 원본 디자인을 시각적으로 비교할 수 있도록 도와줍니다.",
+  "main": "dist/inuix.hawkeye.min.js",
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack serve --open"
+  },
+  "dependencies": {
+    "moveable": "^0.53.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "babel-loader": "^9.2.1",
+    "css-loader": "^6.0.0",
+    "sass": "^1.0.0",
+    "sass-loader": "^12.0.0",
+    "style-loader": "^3.0.0",
+    "terser-webpack-plugin": "^5.0.0",
+    "webpack": "^5.0.0",
+    "webpack-cli": "^4.0.0",
+    "webpack-dev-server": "^4.0.0"
+  }
+}
