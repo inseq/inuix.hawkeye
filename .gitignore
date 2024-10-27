@@ -1,0 +1,49 @@
+# Node.js 관련
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.vscode/
+
+# dotenv 파일 (환경 변수 파일)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 빌드 출력물
+build/
+out/
+
+# 로그 파일
+*.log
+
+# SCSS 파일
+*.css.map
+*.scss.map
+
+# 테스트 관련
+coverage/
+*.lcov
+
+# 임시 파일
+.DS_Store
+Thumbs.db
+.idea/
+
+# 운영 체제 파일
+*.swp
+*.swo
+*.swn
+
+# IDE 설정 파일
+.vscode/
+.idea/
+*.sublime-workspace
+
+# 기타 불필요한 파일
+*.bak
+*.tmp
+*.lock
