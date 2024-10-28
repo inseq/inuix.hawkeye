@@ -86,8 +86,9 @@ export class UIManager {
         this.elements = {
           ...this.elements,
           toolbar: document.getElementById(this.config.ui.toolbarId),
-          opacitySlider: document.getElementById('opacitySlider'),
           toggleButton: document.querySelector('.toggle-button'),
+          opacitySlider: document.getElementById('opacitySlider'),
+          toggleVisibilityButton: document.getElementById('toggleVisibilityButton'),
           lockButton: document.getElementById('lockButton'),
           invertButton: document.getElementById('invertColorButton'),
           xInput: document.getElementById('xInput'),
@@ -100,8 +101,9 @@ export class UIManager {
           'container', 
           'overlayImage', 
           'toolbar', 
-          'toggleButton', 
+          'toggleButton', ,
           'opacitySlider', 
+          'toggleVisibilityButton',
           'lockButton', 
           'invertButton', 
           'xInput', 
@@ -178,6 +180,14 @@ export class UIManager {
       // 토글 버튼 이벤트
       this.elements.toggleButton.addEventListener('click', () => this.toggleToolbar());
 
+      // 이미지 가시성 토글 이벤트
+      this.elements.toggleVisibilityButton.addEventListener('click', () => {
+        const isHidden = this.elements.overlayImage.style.display !== 'none';
+        this.elements.overlayImage.style.display = isHidden ? 'none' : 'block';
+        this.updateVisibilityButton(!isHidden);
+        this.saveToolbarState();
+      });
+
       resolve();
     });
   }
@@ -194,7 +204,8 @@ export class UIManager {
       position: {
         left: this.elements.toolbar.style.left,
         top: this.elements.toolbar.style.top
-      }
+      },
+      isHidden: this.elements.overlayImage.style.display === 'none'
     };
     await this.stateManager.saveToolbarState(state);
   }
@@ -209,6 +220,10 @@ export class UIManager {
       if (state.position) {
         this.elements.toolbar.style.left = state.position.left;
         this.elements.toolbar.style.top = state.position.top;
+      }
+      if (state.isHidden !== undefined) {
+        this.elements.overlayImage.style.display = state.isHidden ? 'none' : 'block';
+        this.updateVisibilityButton(state.isHidden);
       }
     }
   }
@@ -236,6 +251,10 @@ export class UIManager {
 
     if (state.scale) {
       this.elements.scaleInput.value = state.scale;
+    }
+
+    if (state.isHidden !== undefined) {
+      this.updateVisibilityButton(state.isHidden);
     }
 
     if (state.isLocked !== undefined) {
