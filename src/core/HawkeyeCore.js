@@ -262,6 +262,31 @@ export class HawkeyeCore {
     }
   }
 
+  async saveCurrentImage() {
+    if (this.hasOverlayImage()) {
+      alert("기능 준비중입니다.");
+      // try {
+      //   const dataUrl = I.getBase64FromImage(this.getOverlayImage());
+      //   if (dataUrl) {
+      //     // 이미지를 다운로드할 수 있는 링크 생성
+      //     const link = document.createElement('a');
+      //     link.href = dataUrl;
+      //     link.setAttribute('download', 'hawkeye-overlay.png');
+      //     document.body.appendChild(link);
+      //     link.click();
+      //     document.body.removeChild(link);
+      //     // 저장 완료 알림 띄우기
+      //     alert('이미지가 저장되었습니다.');
+      //   } else {
+      //     alert('이미지 저장에 실패했습니다.');
+      //   }
+      // } catch (error) {
+      //   console.error('Failed to save image:', error);
+      //   alert('이미지 저장에 실패했습니다.');
+      // }
+    }
+  }
+
   destroy() {
     Object.values(this.managers).forEach(manager => {
       if (manager && typeof manager.destroy === 'function') {

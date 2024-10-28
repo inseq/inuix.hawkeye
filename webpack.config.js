@@ -3,7 +3,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   mode: 'production',  // 최종 프로덕션 모드 설정
-  entry: './src/inuix.hawkeye.js',  // JS 엔트리 파일
+  entry: './src/main.js',  // JS 엔트리 파일
   output: {
     filename: 'inuix.hawkeye.min.js',  // 번들된 파일 이름
     path: path.resolve(__dirname, 'dist'),  // 결과물이 저장될 경로

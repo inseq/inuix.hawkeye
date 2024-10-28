@@ -1,15 +1,19 @@
+const pkg = require('../../../package.json');
+
 export const toolbarTemplate = `
   <div id="hawkeyeToolbar">
     <div class="hawkeye-head">
-      <h1 class="hawkeye-title">호크아이 - UI 대조 검토기</h1>
-      <button class="toggle-button">▼</button>
+      <div class="title-container">
+        <h1 class="hawkeye-title">호크아이 - UI 대조 검토기</h1>
+        <button class="toggle-button">▼</button>
+      </div>
     </div>
     <div class="hawkeye-body">
       <div class="file-upload-area">
         <input type="file" id="overlayImageInput" accept="image/*" aria-label="오버레이 이미지 선택">
       </div>
       <div class="upload-before">
-        <p>이미지 파일을 업로드 하거나, 클립보드의 이미지를 Ctrl + V 로 붙여넣으세요!</p>
+        <p>이미지 파일을 업로드 하거나,<br> 클립보드 이미지를 Ctrl + V로 붙여넣으세요!</p>
       </div>
       <div class="upload-after">
         <div class="controller">
@@ -19,9 +23,9 @@ export const toolbarTemplate = `
           </div>
           <div class="button-group">
             <div class="buttons-container">
-              <button id="toggleVisibilityButton" class="btn-toggle">🙉</button>
-              <button id="lockButton" class="btn-lock">🔒</button>
-              <button id="invertColorButton" class="btn-invert">🌗</button>
+              <button id="toggleVisibilityButton" class="btn-toggle" title="이미지 on/off">🙉</button>
+              <button id="lockButton" class="btn-lock" title="잠금 및 해제">🔒</button>
+              <button id="invertColorButton" class="btn-invert" title="색상 반전">🌗</button>
             </div>
             <div class="buttons-container">
               <button id="top-left" title="왼쪽상단">↖️</button>
@@ -48,9 +52,13 @@ export const toolbarTemplate = `
     </div>
     <div class="hawkeye-foot">
       <ul>
-        <li><a href="http://pms.inseq.co.kr/inuix/hawkeye" target="_blank" title="새창">호크아이 사용법</a></li>
-        <li><a href="http://pms.inseq.co.kr/inuix/hawkeye/issues" target="_blank" title="새창">호크아이 오류 제보</a></li>
+      <li><a href="http://pms.inseq.co.kr/inuix/hawkeye" target="_blank" title="새창">📖 호크아이 사용법</a></li>
+      <li><a href="http://pms.inseq.co.kr/inuix/hawkeye/issues" target="_blank" title="새창">🐞 오류제보 및 개선제안</a></li>
       </ul>
+      <p class="copyright">
+        <span>Hawkeye v${pkg.version}</span>
+        <a href="https://inseq.co.kr" target="_blank" title="새창">©inseq</a>
+      </p>
     </div>
   </div>
 `;

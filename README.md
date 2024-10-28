@@ -127,3 +127,11 @@ HawkeyeOverlayTool.initialize({
 
 ```git push -v --tags github master:master```
 ```git push -v -f --tags github master:master```
+
+### CDN 퍼지 요청 실행
+퍼지 요청은 jsDelivr의 캐시를 강제로 초기화하는 API 호출
+```
+https://purge.jsdelivr.net/gh/inseq/inuix.hawkeye/dist/inuix.hawkeye.min.js
+https://purge.jsdelivr.net/gh/inseq/inuix.hawkeye@latest/dist/inuix.hawkeye.min.js
+https://purge.jsdelivr.net/gh/inseq/inuix.hawkeye@master/dist/inuix.hawkeye.min.js
+```
