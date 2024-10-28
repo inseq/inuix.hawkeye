@@ -19,9 +19,9 @@ export const toolbarTemplate = `
           </div>
           <div class="button-group">
             <div class="buttons-container">
-              <button id="toggleVisibilityButton" class="btn-toggle">🙉</button>
-              <button id="lockButton" class="btn-lock">🔒</button>
-              <button id="invertColorButton" class="btn-invert">🌗</button>
+              <button id="toggleVisibilityButton" class="btn-toggle" title="이미지 on/off">🙉</button>
+              <button id="lockButton" class="btn-lock" title="잠금 및 해제">🔒</button>
+              <button id="invertColorButton" class="btn-invert" title="색상 반전">🌗</button>
             </div>
             <div class="buttons-container">
               <button id="top-left" title="왼쪽상단">↖️</button>
@@ -49,7 +49,7 @@ export const toolbarTemplate = `
     <div class="hawkeye-foot">
       <ul>
         <li><a href="http://pms.inseq.co.kr/inuix/hawkeye" target="_blank" title="새창">호크아이 사용법</a></li>
-        <li><a href="http://pms.inseq.co.kr/inuix/hawkeye/issues" target="_blank" title="새창">호크아이 오류 제보</a></li>
+        <li><a href="http://pms.inseq.co.kr/inuix/hawkeye/issues" target="_blank" title="새창">개선제안 및 오류 제보</a></li>
       </ul>
     </div>
   </div>

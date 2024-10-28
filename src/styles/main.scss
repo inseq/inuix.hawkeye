@@ -139,7 +139,7 @@
 
   .hawkeye-foot {
     border-top: 1px solid rgba(#000, 0.1);
-    padding: 4px 16px;
+    padding: 8px 16px;
     font-size: 12px;
     // a {
     //   opacity: 0.5;
@@ -151,6 +151,8 @@
     border: 2px dashed #666;
     padding: 10px;
     border-radius: 8px;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .upload-before {
