@@ -131,7 +131,12 @@ HawkeyeOverlayTool.initialize({
 ### CDN 퍼지 요청 실행
 퍼지 요청은 jsDelivr의 캐시를 강제로 초기화하는 API 호출
 ```
-https://purge.jsdelivr.net/gh/inseq/inuix.hawkeye/dist/inuix.hawkeye.min.js
+특정버전
+https://purge.jsdelivr.net/gh/inseq/inuix.hawkeye@1.0.1/dist/inuix.hawkeye.min.js
+
+최신태그
 https://purge.jsdelivr.net/gh/inseq/inuix.hawkeye@latest/dist/inuix.hawkeye.min.js
+
+최신코드
 https://purge.jsdelivr.net/gh/inseq/inuix.hawkeye@master/dist/inuix.hawkeye.min.js
 ```

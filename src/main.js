@@ -8,17 +8,26 @@ class HawkeyeOverlayTool {
 
   constructor(config = {}) {
     console.log('[Hawkeye] Constructor config:', config);
-
+  
     if (HawkeyeOverlayTool.instance) {
       console.log('[Hawkeye] Destroying existing instance');
       HawkeyeOverlayTool.instance.destroy();
     }
-
-    const mergedConfig = {
-      ...DefaultConfig,
-      ...config
+  
+    const deepMerge = (target, source) => {
+      const result = { ...target };
+      for (const key in source) {
+        if (source[key] instanceof Object && !Array.isArray(source[key])) {
+          result[key] = deepMerge(target[key] || {}, source[key]);
+        } else {
+          result[key] = source[key];
+        }
+      }
+      return result;
     };
-
+  
+    const mergedConfig = deepMerge(DefaultConfig, config);
+  
     this.core = new HawkeyeCore(mergedConfig);
     this.config = mergedConfig;
     HawkeyeOverlayTool.instance = this;
