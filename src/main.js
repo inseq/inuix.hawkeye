@@ -35,6 +35,9 @@ class HawkeyeOverlayTool {
 
   async initialize() {
     try {
+      console.log('[Hawkeye] Final merged config:', this.config);
+      console.log('[Hawkeye] Current branch:', this.managers?.visibility?.extractBranchFromUrl());
+  
       if (this.config.enabled === false) {
         console.log('[Hawkeye] Config disabled, destroying');
         this.destroy();
