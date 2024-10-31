@@ -234,20 +234,25 @@ export class ImageOverlay {
     this.saveState();
   }
 
-  toggleInvert() {
-    if (!this.image) return;
-    
-    this.state.isInverted = !this.state.isInverted;
-    const currentFilter = this.image.style.filter;
-    
-    if (this.state.isInverted) {
-      this.image.style.filter = currentFilter ? `${currentFilter} invert(1)` : 'invert(1)';
-    } else {
-      this.image.style.filter = currentFilter.replace('invert(1)', '').trim();
-    }
+  async toggleInvert() {
+    if (!this.image || !this.image.complete) return;
+    try {
+      if (this.image.naturalWidth === 0 || this.image.naturalHeight === 0) {
+          console.error('Image not properly loaded');
+          return;
+      }
 
-    this.notifyInvertChange();
-    this.saveState();
+      this.state.isInverted = !this.state.isInverted;
+      
+      this.image.style.filter = this.state.isInverted ? 'invert(1)' : '';
+      
+      this.notifyInvertChange();
+      await this.saveState();
+        
+    } catch (error) {
+      console.error('Failed to invert image:', error);
+      this.state.isInverted = !this.state.isInverted;
+    }
   }
 
   toggleLock() {
