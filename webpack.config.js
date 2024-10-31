@@ -15,12 +15,28 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.scss$/,  // SCSS 파일 처리
+        test: /\.scss$/,
         use: [
-          'style-loader',  // 스타일을 JS에 포함
-          'css-loader',    // CSS를 JS로 변환
-          'sass-loader',   // SCSS를 CSS로 컴파일
-        ],
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              // 이전 설정
+              // implementation: require('sass'),
+              // sassOptions: {
+              //   outputStyle: 'compressed'
+              // }
+              
+              // 새로운 설정
+              api: 'modern',
+              implementation: require('sass'),
+              sassOptions: {
+                outputStyle: 'compressed'
+              }
+            }
+          }
+        ]
       },
       {
         test: /\.js$/,  // JS 파일 처리
