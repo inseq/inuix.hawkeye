@@ -33,7 +33,7 @@ export class EventManager {
       if (this.core.hasOverlayImage() && !this.core.isOverlayLocked()) {
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
           event.preventDefault();
-          this.handleArrowKey(event.key);
+          this.handleArrowKey(event.key, event.shiftKey);
         }
       }
     };
@@ -149,25 +149,27 @@ export class EventManager {
     }
   }
 
-  handleArrowKey(key) {
+  handleArrowKey(key, isShiftPressed) {
     const image = this.core.getOverlayImage();
     if (!image) return;
 
     let top = parseInt(image.style.top) || 0;
     let left = parseInt(image.style.left) || 0;
+    
+    const moveDistance = isShiftPressed ? 10 : 1;
 
     switch (key) {
       case 'ArrowUp':
-        top -= 1;
+        top -= moveDistance;
         break;
       case 'ArrowDown':
-        top += 1;
+        top += moveDistance;
         break;
       case 'ArrowLeft':
-        left -= 1;
+        left -= moveDistance;
         break;
       case 'ArrowRight':
-        left += 1;
+        left += moveDistance;
         break;
     }
 
