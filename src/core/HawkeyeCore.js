@@ -30,7 +30,7 @@ export class HawkeyeCore {
         console.info('[Hawkeye] 전역 설정에 의해 비활성화됨');
         return false;
       }
-  
+
       // 설정 유효성 검사
       const { isValid, errors } = Validators.validateConfig(this.config);
       if (!isValid) {
@@ -39,6 +39,11 @@ export class HawkeyeCore {
 
       // 노출 조건 체크
       this.managers.visibility = new VisibilityManager(this.config);
+      
+      // visibility 초기화 후 로그 출력
+      console.log('[Hawkeye] Final merged config:', this.config);
+      console.log('[Hawkeye] Current branch:', this.managers.visibility.extractBranchFromUrl());
+
       const shouldDisplay = await this.managers.visibility.checkVisibility();
       if (!shouldDisplay) {
         console.info('[Hawkeye] Visibility conditions not met. Tool will not be displayed.');
