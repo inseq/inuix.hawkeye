@@ -229,41 +229,38 @@ export class UIManager {
   }
 
   updateControls(state) {
+    console.log('[UIManager] Updating controls with state:', state);
+    
     if (!state) return;
 
     if (state.hasImage) {
-      document.querySelector('.upload-before').style.display = 'none';
-      document.querySelector('.upload-after').style.display = 'flex';
-    } else {
-      document.querySelector('.upload-before').style.display = 'flex';
-      document.querySelector('.upload-after').style.display = 'none';
+        document.querySelector('.upload-before').style.display = 'none';
+        document.querySelector('.upload-after').style.display = 'flex';
     }
 
     if (state.opacity !== undefined) {
-      this.elements.opacitySlider.value = state.opacity;
-      this.elements.opacitySlider.disabled = !state.hasImage;
-    }
-
-    if (state.position) {
-      this.elements.xInput.value = state.position.x;
-      this.elements.yInput.value = state.position.y;
-    }
-
-    if (state.scale) {
-      this.elements.scaleInput.value = state.scale;
+        this.elements.opacitySlider.value = state.opacity;
+        this.elements.opacitySlider.disabled = !state.hasImage;
     }
 
     if (state.isHidden !== undefined) {
-      this.updateVisibilityButton(state.isHidden);
+        this.updateVisibilityButton(state.isHidden);
+        const button = document.getElementById('toggleVisibilityButton');
+        button.innerHTML = state.isHidden ? '🙈' : '🙉';
+        button.classList.toggle('active', state.isHidden);
     }
 
     if (state.isLocked !== undefined) {
-      this.elements.lockButton.classList.toggle('active', state.isLocked);
+        const button = document.getElementById('lockButton');
+        button.classList.toggle('active', state.isLocked);
     }
 
     if (state.isInverted !== undefined) {
-      this.elements.invertButton.classList.toggle('active', state.isInverted);
+        const button = document.getElementById('invertColorButton');
+        button.classList.toggle('active', state.isInverted);
     }
+
+    console.log('[UIManager] Controls update complete');
   }
 
   resetControls() {

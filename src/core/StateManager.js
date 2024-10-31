@@ -137,61 +137,68 @@ export class StateManager {
   }
 
   async getState() {
+    console.log('[StateManager] Getting state...');
+    
     try {
-      if (!this.isInitialized || !this.db) {
-        await this.initialize();
-      }
-
-      return new Promise((resolve, reject) => {
-        try {
-          const transaction = this.db.transaction(["states"], "readonly");
-          const store = transaction.objectStore("states");
-          const request = store.get(this.STORAGE_KEY);
-
-          request.onsuccess = () => {
-            const state = request.result;
-            if (!state) {
-              // IndexedDB에 데이터가 없는 경우 localStorage 확인
-              try {
-                const savedState = localStorage.getItem(this.STORAGE_KEY);
-                if (savedState) {
-                  const parsedState = JSON.parse(savedState);
-                  // localStorage의 데이터를 IndexedDB에 동기화
-                  this.saveState(parsedState).catch(console.error);
-                  resolve(parsedState);
-                } else {
-                  resolve(null);
-                }
-              } catch (e) {
-                console.warn("Failed to read from localStorage:", e);
-                resolve(null);
-              }
-              return;
-            }
-            resolve(state);
-          };
-
-          request.onerror = () => {
-            console.error("Failed to read from IndexedDB:", request.error);
-            // localStorage fallback
-            try {
-              const savedState = localStorage.getItem(this.STORAGE_KEY);
-              resolve(savedState ? JSON.parse(savedState) : null);
-            } catch (e) {
-              console.error("Failed to read from localStorage:", e);
-              resolve(null);
-            }
-          };
-        } catch (error) {
-          console.error("Transaction failed:", error);
-          reject(error);
+        if (!this.isInitialized || !this.db) {
+            console.log('[StateManager] Initializing DB for getState');
+            await this.initialize();
         }
-      });
+
+        return new Promise((resolve, reject) => {
+            try {
+                const transaction = this.db.transaction(["states"], "readonly");
+                const store = transaction.objectStore("states");
+                const request = store.get(this.STORAGE_KEY);
+
+                request.onsuccess = () => {
+                    const state = request.result;
+                    console.log('[StateManager] Retrieved state:', state);
+                    
+                    if (!state) {
+                        // IndexedDB에 데이터가 없는 경우 localStorage 확인
+                        try {
+                            const savedState = localStorage.getItem(this.STORAGE_KEY);
+                            console.log('[StateManager] Fallback to localStorage:', savedState);
+                            
+                            if (savedState) {
+                                const parsedState = JSON.parse(savedState);
+                                // localStorage의 데이터를 IndexedDB에 동기화
+                                this.saveState(parsedState).catch(console.error);
+                                resolve(parsedState);
+                            } else {
+                                resolve(null);
+                            }
+                        } catch (e) {
+                            console.warn('[StateManager] Failed to read from localStorage:', e);
+                            resolve(null);
+                        }
+                        return;
+                    }
+                    resolve(state);
+                };
+
+                request.onerror = () => {
+                    console.error('[StateManager] Failed to read from IndexedDB:', request.error);
+                    // localStorage fallback
+                    try {
+                        const savedState = localStorage.getItem(this.STORAGE_KEY);
+                        resolve(savedState ? JSON.parse(savedState) : null);
+                    } catch (e) {
+                        console.error('[StateManager] Failed to read from localStorage:', e);
+                        resolve(null);
+                    }
+                };
+            } catch (error) {
+                console.error('[StateManager] Transaction failed:', error);
+                reject(error);
+            }
+        });
     } catch (error) {
-      console.error("Failed to get state:", error);
-      return null;
+        console.error('[StateManager] Failed to get state:', error);
+        return null;
     }
-  }
+}
 
   async clearState() {
     try {
@@ -238,10 +245,45 @@ export class StateManager {
   }
 
   validateState(state) {
+    console.log('[StateManager] Validating state:', state);
+
     // 기본적인 상태 구조 검증
-    const requiredProperties = ["position", "scale", "opacity"];
-    return requiredProperties.every((prop) => prop in state);
-  }
+    const requiredProperties = [
+        "position", "scale", "opacity",
+        "isHidden", "isLocked", "isInverted"
+    ];
+    
+    const missingProps = requiredProperties.filter(prop => !(prop in state));
+    if (missingProps.length > 0) {
+        console.warn('[StateManager] Missing properties:', missingProps);
+        return false;
+    }
+
+    // 각 속성의 타입 검증 결과를 저장
+    const validationResults = {
+        position: state.position && 
+                 typeof state.position.x === 'number' && 
+                 typeof state.position.y === 'number',
+        scale: typeof state.scale === 'number',
+        opacity: typeof state.opacity === 'number',
+        isHidden: typeof state.isHidden === 'boolean',
+        isLocked: typeof state.isLocked === 'boolean',
+        isInverted: typeof state.isInverted === 'boolean'
+    };
+
+    // 실패한 타입 검증 결과 확인
+    const invalidProps = Object.entries(validationResults)
+        .filter(([_, isValid]) => !isValid)
+        .map(([prop]) => prop);
+
+    if (invalidProps.length > 0) {
+        console.warn('[StateManager] Invalid property types:', invalidProps);
+        return false;
+    }
+
+    console.log('[StateManager] State validation successful');
+    return true;
+}
 
   async saveToolbarState(state) {
     if (!state) return;

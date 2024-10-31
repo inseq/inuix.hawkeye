@@ -19,13 +19,12 @@ HTML의 `<head>` 또는 `<body>` 태그 안에 라이브러리 2줄만 추가하
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/moveable/dist/moveable.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/inseq/inuix.hawkeye/dist/inuix.hawkeye.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/inseq/inuix.hawkeye@latest/dist/inuix.hawkeye.min.js"></script>
 ```
 
 ### 2.2 옵션 설정
 
 호크아이는 전역, 도메인, IP 대역, PMS 환경별로 노출 여부를 설정할 수 있습니다.
-
 ```javascript
 // 기본 설정 예시
 HawkeyeOverlayTool.initialize({
@@ -59,19 +58,41 @@ HawkeyeOverlayTool.initialize({
 });
 ```
 
-### 비활성화하고 싶을 때
-```javascript
-HawkeyeOverlayTool.initialize({ enabled: false });
-```
+### 비활성화 예제
+```html
+<!-- 1. 라이브러리 -->
+<script src="https://cdn.jsdelivr.net/npm/moveable/dist/moveable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/inseq/inuix.hawkeye@latest/dist/inuix.hawkeye.min.js"></script>
 
-### containerId를 변경하고 싶을 때
-```javascript
-HawkeyeOverlayTool.initialize({ 
-  containerId: 'customContainer'
+<!-- 2. 초기화 -->
+<script>
+HawkeyeOverlayTool.initialize({
+  enabled: false
 });
+</script>
+
 ```
 
-#### 설정 항목 설명
+### 브랜치 노출 설정 변경 예제
+```html
+<!-- 1. 라이브러리 -->
+<script src="https://cdn.jsdelivr.net/npm/moveable/dist/moveable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/inseq/inuix.hawkeye@latest/dist/inuix.hawkeye.min.js"></script>
+
+<!-- 2. 초기화 -->
+<script>
+  HawkeyeOverlayTool.initialize({
+    pms: {
+      branches: {
+        'master': true,
+        'develop': true
+      }
+    }
+  });
+</script>
+```
+
+### 설정 항목 설명
 
 - **enabled**: 호크아이 도구의 전역 활성화 여부를 설정합니다. `false`로 설정하면 도구 자체가 로드되지 않습니다.
 
@@ -116,27 +137,23 @@ HawkeyeOverlayTool.initialize({
 검토단계 뿐 아니라 개발중에도 활용할 수 있습니다.
 2. **초기화** 버튼을 클릭하거나, 새로운 이미지를 업로드하면 이전 이미지 상태가 초기화 됩니다.
 
+
+## 릴리즈 노트
+
+2024.10.31 v1.0.1
+- CDN 이슈 해결
+- 옵션 설정 버그 수정
+- 버전 정보 추가 등 일부 UI 개선
+- Shift + 방향키: 10px 단위 이동 기능 추가
+
+2024.10.28 v1.0.0
+- 호크아이 코어 배포
+- 이미지 오버레이 및 URL별 상태 저장 기능
+
+
 ## 기타
 
 ### 라이선스
 
 - [(주)인시퀀스 I.N.UIX Framework](https://inseq.co.kr/ko/cntnts/i-26/web.do)
 - leroro@inseq.co.kr
-
-### 프로젝트 CDN 배포
-
-```git push -v --tags github master:master```
-```git push -v -f --tags github master:master```
-
-### CDN 퍼지 요청 실행
-퍼지 요청은 jsDelivr의 캐시를 강제로 초기화하는 API 호출
-```
-특정버전
-https://purge.jsdelivr.net/gh/inseq/inuix.hawkeye@1.0.1/dist/inuix.hawkeye.min.js
-
-최신태그
-https://purge.jsdelivr.net/gh/inseq/inuix.hawkeye@latest/dist/inuix.hawkeye.min.js
-
-최신코드
-https://purge.jsdelivr.net/gh/inseq/inuix.hawkeye@master/dist/inuix.hawkeye.min.js
-```

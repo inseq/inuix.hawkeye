@@ -836,16 +836,24 @@
     }
   </style>
   <script src="./demos/libs/moveable.min.js"></script>
-  <script src="./inuix.hawkeye.min.js"></script>
+  <!-- <script src="./inuix.hawkeye.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/gh/inseq/inuix.hawkeye@master/dist/inuix.hawkeye.min.js"></script>
   <!-- <script src="./dist/inuix.hawkeye.min.js"></script> -->
-  <!-- <script src="https://cdn.jsdelivr.net/gh/inseq/inuix.hawkeye@master/dist/inuix.hawkeye.min.js"></script> -->
+  <script>
+    HawkeyeOverlayTool.initialize({
+      enabled: true,
+      pms: {
+        branches: {
+          'master': true,
+          'develop': true
+        }
+      }
+    });
+  </script>
 </head>
 
 <body for="html-export">
-
-
-  <div class="crossnote markdown-preview  ">
-
+  <div class="crossnote markdown-preview">
     <h1 id="️-호크아이---ui-화면-대조-검토기">🦅👁️ 호크아이 - UI 화면 대조 검토기 </h1>
     <h2 id="1-개요">1. 개요 </h2>
     <p>이 플러그인은 웹 페이지 상에서 이미지 오버레이 기능을 제공하여<br>
@@ -860,7 +868,7 @@
     <p>HTML의 <code>&lt;head&gt;</code> 또는 <code>&lt;body&gt;</code> 태그 안에 라이브러리 2줄을 추가하세요.<br>
       별도의 설정 없이도 <strong>플러그인이 바로 작동</strong>합니다!</p>
     <pre data-role="codeBlock" data-info="html" class="language-html html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/moveable/dist/moveable.min.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/gh/inseq/inuix.hawkeye/dist/inuix.hawkeye.min.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/gh/inseq/inuix.hawkeye@latest/dist/inuix.hawkeye.min.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
 </code></pre>
     <h2 id="3-호크아이-사용하기">3. 호크아이 사용하기 </h2>
     <p>화면 우측상단에 호크아이 툴바가 표시됩니다.</p>

@@ -386,21 +386,66 @@ export class ImageOverlay {
       this.currentScale = parseFloat(state.scale) || 1.0;
       await this.displayImage(file, { isRestoringState: true });
       
-      Object.assign(this.state, state);
+      // 상태 복원
+      this.state = { ...state };
       
+      // 이미지 상태 직접 적용
       this.updatePosition(state.position.x, state.position.y);
       this.setOpacity(state.opacity);
       
-      if (state.isInverted) this.toggleInvert();
-      if (state.isLocked) this.toggleLock();
-      if (state.isHidden) this.toggleVisibility();
+      // 이미지에 상태 직접 적용
+      if (this.image) {
+        // 반전 상태 적용
+        const currentFilter = this.image.style.filter;
+        if (state.isInverted) {
+            this.image.style.filter = currentFilter ? `${currentFilter} invert(1)` : 'invert(1)';
+        } else {
+            this.image.style.filter = currentFilter ? currentFilter.replace('invert(1)', '').trim() : '';
+        }
+
+        // 잠금 상태 적용
+        this.image.style.pointerEvents = state.isLocked ? 'none' : 'auto';
+        this.image.style.userSelect = state.isLocked ? 'none' : 'auto';
+        if (state.isLocked && this.moveableInstance) {
+            this.moveableInstance.destroy();
+            this.moveableInstance = null;
+        } else if (!state.isLocked) {
+            this.initializeMoveable();
+        }
+
+        // 가시성 상태 적용
+        if (state.isHidden) {
+          this.image.style.visibility = 'hidden';
+          // 무버블 요소들도 함께 숨김
+          const moveableElements = document.querySelectorAll(
+              '.moveable-control-box, .moveable-line, .moveable-direction'
+          );
+          moveableElements.forEach((element) => {
+              element.style.visibility = 'hidden';
+          });
+        } else {
+          this.image.style.visibility = 'visible';
+          // 무버블 요소들도 함께 표시
+          const moveableElements = document.querySelectorAll(
+              '.moveable-control-box, .moveable-line, .moveable-direction'
+          );
+          moveableElements.forEach((element) => {
+              element.style.visibility = 'visible';
+          });
+        }
+      }
+
+      // UI 업데이트 알림
+      this.notifyLockChange();
+      this.notifyVisibilityChange();
+      this.notifyInvertChange();
       
       this.isRestoringState = false;
     } catch (error) {
-      console.error('Failed to restore state:', error);
-      this.isRestoringState = false;
+        console.error('Failed to restore state:', error);
+        this.isRestoringState = false;
     }
-  }
+}
 
   destroy() {
     if (this.moveableInstance) {

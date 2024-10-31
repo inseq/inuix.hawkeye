@@ -190,21 +190,29 @@ export class HawkeyeCore {
 
   async restoreState() {
     try {
-      const state = await this.managers.state.getState();
-      if (state) {
-        await this.overlay.restoreState(state);
-        this.managers.ui.updateControls({
-          hasImage: true,
-          opacity: state.opacity,
-          position: state.position,
-          scale: state.scale,
-          isLocked: state.isLocked,
-          isInverted: state.isInverted,
-          isHidden: state.isHidden
-        });
-      }
+        console.log('[HawkeyeCore] Starting state restoration');
+        const state = await this.managers.state.getState();
+        console.log('[HawkeyeCore] Retrieved state:', state);
+        
+        if (state) {
+            // 1. 이미지 상태 복원
+            await this.overlay.restoreState(state);
+            
+            // 2. UI 상태 업데이트
+            this.managers.ui.updateControls({
+                hasImage: true,
+                opacity: state.opacity,
+                position: state.position,
+                scale: state.scale,
+                isLocked: state.isLocked,
+                isInverted: state.isInverted,
+                isHidden: state.isHidden
+            });
+            
+            console.log('[HawkeyeCore] State restoration complete');
+        }
     } catch (error) {
-      ErrorHandler.handle(error, 'Failed to restore state');
+        console.error('[HawkeyeCore] Failed to restore state:', error);
     }
   }
 
