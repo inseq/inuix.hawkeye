@@ -835,11 +835,11 @@
       display: none
     }
   </style>
-  <script src="./demos/libs/moveable.min.js"></script>
-  <!-- <script src="./inuix.hawkeye.min.js"></script> -->
+  <!-- <script src="./demos/libs/moveable.min.js"></script>
+  <script src="./inuix.hawkeye.min.js"></script> -->
   <!-- <script src="https://cdn.jsdelivr.net/gh/inseq/inuix.hawkeye@master/dist/inuix.hawkeye.min.js"></script> -->
-  <script src="./dist/inuix.hawkeye.min.js"></script>
-  <script>
+  <!-- <script src="./dist/inuix.hawkeye.min.js"></script> -->
+  <!-- <script>
     HawkeyeOverlayTool.initialize({
       enabled: true,
       pms: {
@@ -849,7 +849,7 @@
         }
       }
     });
-  </script>
+  </script> -->
 </head>
 
 <body for="html-export">
@@ -864,13 +864,51 @@
       <li><strong>정확한 배치</strong>: 오버레이 이미지 위치 미세 조정으로 퍼블리싱 화면과 일치 여부를 확인합니다.</li>
       <li><strong>URL별 이미지 상태 저장</strong>: 화면을 새로고침해도 마지막 상태가 유지됩니다. UI 개발 단계에서부터 활용해 보세요!</li>
     </ul>
-    <h2 id="2-라이브러리-추가하기">2. 라이브러리 추가하기 </h2>
-    <p>HTML의 <code>&lt;head&gt;</code> 또는 <code>&lt;body&gt;</code> 태그 안에 라이브러리 2줄을 추가하세요.<br>
-      별도의 설정 없이도 <strong>플러그인이 바로 작동</strong>합니다!</p>
+
+  
+    
+    <h2 id="2-시작하기">2. 시작하기</h2>
+    <p>
+      호크아이를 사용하는 방법에는 두 가지가 있습니다.<br>
+      빠른 테스트를 위한 북마클릿 방식과 프로젝트에 통합하는 방식 중 선택하세요.
+    </p>
+
+    <h3 id="2-1-북마클릿으로-빠르게-시작하기">2.1. 북마클릿으로 빠르게 시작하기</h3>
+    <p>브라우저에서 호크아이를 바로 사용하고 싶다면 아래 버튼을 북마크바에 끌어다 놓으세요.</p>
+    
+    <blockquote>
+      <p>💡 개발 환경에서는 "프로젝트에 통합하기" 방식을 권장합니다. <br>
+      북마클릿은 화면을 새로고침하면 사라지므로 개발 단계에서 빠르게 호크아이를 테스트해볼 때만 사용하세요.</p>
+    </blockquote>
+
+    <div style="text-align: center; margin: 1em 0; padding: 1em 0 0.5em; background: #f5f5f5; border-radius: 8px;">
+      <p style="margin-bottom: 1em;">👇 아래 버튼을 북마크바로 드래그하세요!</p>
+      <a href="javascript:(function(){if(window.HawkeyeOverlayTool){console.log('Hawkeye already loaded');return;}var s1=document.createElement('script');s1.src='https://cdn.jsdelivr.net/npm/moveable/dist/moveable.min.js';var s2=document.createElement('script');s2.src='https://cdn.jsdelivr.net/gh/inseq/inuix.hawkeye@latest/dist/inuix.hawkeye.min.js';s1.onload=function(){document.body.appendChild(s2);};document.body.appendChild(s1);})();"
+        style="display: inline-block; padding: 12px 24px; background: #0066cc; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; cursor: move;"
+        onclick="return false;">
+        🦅 호크아이
+      </a>
+      <p style="margin-top: 1em; font-size: 0.9em; color: #666;">
+        (버튼을 클릭하지 말고 드래그해서 북마크바에 추가하세요)
+      </p>
+    </div>
+
+    <h4 id="설치-방법">설치 방법</h4>
+    <ol>
+      <li>브라우저의 북마크바가 보이지 않는다면 <kbd>Ctrl/Cmd + Shift + B</kbd>를 눌러 표시하세요.</li>
+      <li>위의 파란색 "🦅 호크아이" 버튼을 북마크바로 드래그하세요.</li>
+      <li>이제 원하는 페이지에서 북마크를 클릭하면 호크아이가 실행됩니다!</li>
+    </ol>
+
+    <h3 id="2-2-개발환경에-통합하기">2.2. 개발환경에 통합하기</h3>
+    <p>개발환경에 호크아이를 통합하려면 HTML의 <code>&lt;head&gt;</code> 또는 <code>&lt;body&gt;</code> 태그 안에 라이브러리 2줄을 추가하세요.<br>
+    별도의 설정 없이도 <strong>플러그인이 바로 작동</strong>합니다!</p>
+
     <pre data-role="codeBlock" data-info="html" class="language-html html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/moveable/dist/moveable.min.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/gh/inseq/inuix.hawkeye@latest/dist/inuix.hawkeye.min.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code></pre>
-    <h2 id="3-호크아이-사용하기">3. 호크아이 사용하기 </h2>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/gh/inseq/inuix.hawkeye@latest/dist/inuix.hawkeye.min.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code></pre>
+
+
+    <h2 id="3-호크아이-사용법">3. 호크아이 사용법 </h2>
     <p>화면 우측상단에 호크아이 툴바가 표시됩니다.</p>
     <ul>
       <li><a href="demos/example1.html">🔗 홈페이지 적용 예제 미리보기</a></li>
