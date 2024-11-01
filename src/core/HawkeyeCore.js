@@ -142,44 +142,9 @@ export class HawkeyeCore {
   }
 
   setPosition(position) {
-    if (!this.hasOverlayImage()) return;
-
-    const image = this.overlay.image;
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const scaledWidth = parseFloat(image.style.width);
-    const scaledHeight = parseFloat(image.style.height);
-
-    let x, y;
-
-    switch (position) {
-      case 'top-left':
-        x = scrollLeft;
-        y = scrollTop;
-        break;
-      case 'top-right':
-        x = scrollLeft + viewportWidth - scaledWidth;
-        y = scrollTop;
-        break;
-      case 'bottom-left':
-        x = scrollLeft;
-        y = scrollTop + viewportHeight - scaledHeight;
-        break;
-      case 'bottom-right':
-        x = scrollLeft + viewportWidth - scaledWidth;
-        y = scrollTop + viewportHeight - scaledHeight;
-        break;
-      case 'center':
-        x = scrollLeft + (viewportWidth - scaledWidth) / 2;
-        y = scrollTop + (viewportHeight - scaledHeight) / 2;
-        break;
-      default:
-        return;
+    if (this.hasOverlayImage()) {
+      this.overlay.setPosition(position);
     }
-
-    this.updateOverlayPosition(x, y);
   }
 
   async saveState() {

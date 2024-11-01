@@ -32,7 +32,7 @@ export const toolbarTemplate = `
               <button id="top-right" title="오른쪽상단">↗️</button>
               <button id="bottom-left" title="왼쪽하단">↙️</button>
               <button id="bottom-right" title="오른쪽하단">↘️</button>
-              <button id="center" title="중앙">⏺️</button>
+              <button id="center" title="너비중앙">⏺️</button>
             </div>
           </div>
           <div id="stateContainer">
