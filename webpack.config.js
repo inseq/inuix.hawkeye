@@ -9,8 +9,17 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),  // 결과물이 저장될 경로
   },
   optimization: {
-    minimize: true,  // JS 및 CSS 최소화 설정
-    minimizer: [new TerserPlugin()],
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            pure_funcs: ['console.log', 'console.info', 'console.debug']
+          }
+        },
+        extractComments: false,
+      }),
+    ],
   },
   module: {
     rules: [
