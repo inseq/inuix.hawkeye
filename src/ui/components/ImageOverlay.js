@@ -184,6 +184,47 @@ export class ImageOverlay {
     this.saveState();
   }
 
+  setPosition(positionType) {
+    if (!this.image) return;
+
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scaledWidth = parseFloat(this.image.style.width);
+    const scaledHeight = parseFloat(this.image.style.height);
+
+    let x, y;
+    const currentY = parseFloat(this.image.style.top) || scrollTop;
+
+    switch (positionType) {
+      case 'top-left':
+        x = scrollLeft;
+        y = scrollTop;
+        break;
+      case 'top-right':
+        x = scrollLeft + viewportWidth - scaledWidth;
+        y = scrollTop;
+        break;
+      case 'bottom-left':
+        x = scrollLeft;
+        y = scrollTop + viewportHeight - scaledHeight;
+        break;
+      case 'bottom-right':
+        x = scrollLeft + viewportWidth - scaledWidth;
+        y = scrollTop + viewportHeight - scaledHeight;
+        break;
+      case 'center':
+        x = scrollLeft + (viewportWidth - scaledWidth) / 2;
+        y = currentY; // 현재 Y 위치 유지
+        break;
+      default:
+        return;
+    }
+
+    this.updatePosition(x, y);
+  }
+
   updatePosition(x, y) {
     if (!this.image) return;
     
@@ -234,20 +275,25 @@ export class ImageOverlay {
     this.saveState();
   }
 
-  toggleInvert() {
-    if (!this.image) return;
-    
-    this.state.isInverted = !this.state.isInverted;
-    const currentFilter = this.image.style.filter;
-    
-    if (this.state.isInverted) {
-      this.image.style.filter = currentFilter ? `${currentFilter} invert(1)` : 'invert(1)';
-    } else {
-      this.image.style.filter = currentFilter.replace('invert(1)', '').trim();
-    }
+  async toggleInvert() {
+    if (!this.image || !this.image.complete) return;
+    try {
+      if (this.image.naturalWidth === 0 || this.image.naturalHeight === 0) {
+          console.error('Image not properly loaded');
+          return;
+      }
 
-    this.notifyInvertChange();
-    this.saveState();
+      this.state.isInverted = !this.state.isInverted;
+      
+      this.image.style.filter = this.state.isInverted ? 'invert(1)' : '';
+      
+      this.notifyInvertChange();
+      await this.saveState();
+        
+    } catch (error) {
+      console.error('Failed to invert image:', error);
+      this.state.isInverted = !this.state.isInverted;
+    }
   }
 
   toggleLock() {

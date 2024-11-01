@@ -1,6 +1,6 @@
 {
   "name": "inuix.hawkeye",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "이 플러그인은 웹 페이지 상에서 이미지 오버레이 기능을 제공하여\r 퍼블리싱 결과물과 원본 디자인을 시각적으로 비교할 수 있도록 도와줍니다.",
   "main": "dist/inuix.hawkeye.min.js",
   "scripts": {
