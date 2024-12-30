@@ -12,6 +12,10 @@ export const toolbarTemplate = `
       <div class="file-upload-area">
         <input type="file" id="overlayImageInput" accept="image/*" aria-label="오버레이 이미지 선택">
       </div>
+      <div class="url-input-area">
+        <input type="text" class="form-control" id="url-val" placeholder="캡쳐할 URL" title="URL 입력">
+        <button type="button" id="call-markup" class="btn-url-capture" title="캡쳐할 URL">캡쳐 불러오기</button>
+      </div>
       <div class="upload-before">
         <p>이미지 파일을 업로드 하거나,<br> 클립보드 이미지를 Ctrl + V로 붙여넣으세요!</p>
       </div>

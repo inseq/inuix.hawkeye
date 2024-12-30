@@ -244,6 +244,30 @@ $toolbar-toggle-button-size: 40px;
     }
   }
 
+  .url-input-area {
+    display: flex;
+    margin: 0 12px 12px;
+    gap: 8px;
+    font-size: 13px;
+
+    border-radius: 8px;
+    border: 2px dashed #666;
+    padding: 10px;
+
+    .form-control {
+      min-width: 50px;
+      flex: 1 1 auto;
+      background: #fff;
+      padding: 0 12px;
+      border-radius: 4px;
+    }
+
+    .btn-url-capture {
+      flex: 0 0 auto;
+      cursor: pointer;
+    }
+  }
+
   .upload-after {
     display: flex;
     flex-direction: column;
