@@ -1,4 +1,6 @@
-import { toolbarTemplate } from './templates/toolbar';
+import {
+  toolbarTemplate
+} from './templates/toolbar';
 
 export class UIManager {
   constructor(stateManager, config = {}) {
@@ -16,43 +18,87 @@ export class UIManager {
       yInput: null,
       scaleInput: null
     };
-    
+
     this.isDragging = false;
-    this.dragOffset = { x: 0, y: 0 };
+    this.dragOffset = {
+      x: 0,
+      y: 0
+    };
   }
 
   async initialize() {
     try {
       // 1. 컨테이너 초기화
       await this.initContainer();
-      
+
       // 2. 오버레이 이미지 엘리먼트 생성
       const overlayImage = document.createElement('img');
       overlayImage.id = this.config.ui.overlayId;
       overlayImage.className = 'hawkeye-overlay-image';
       this.elements.container.appendChild(overlayImage);
       this.elements.overlayImage = overlayImage;
-      
+
       // 3. 툴바 렌더링
       await this.renderToolbar();
-      
+
       // 4. DOM 업데이트 대기
       await new Promise(resolve => setTimeout(resolve, 0));
-      
+
       // 5. 나머지 요소 초기화
       await this.initializeElements();
-      
-      // 6. 이벤트 리스너 연결
-      await this.attachEventListeners();
-      
-      // 7. 툴바 상태 복원
+
+      // 6. 툴바 상태 복원
       await this.restoreToolbarState();
-      
+
       return true;
     } catch (error) {
       console.error('Failed to initialize UIManager:', error);
       return false;
     }
+  }
+
+  handleDragStart(x, y) {
+    // 접힌 상태에서는 드래그 시작하지 않음
+    if (this.elements.toolbar.classList.contains('minimized')) return;
+
+    this.isDragging = true;
+    this.elements.toolbar.classList.add('dragging');
+    this.dragOffset = {
+      x: x - this.elements.toolbar.offsetLeft,
+      y: y - this.elements.toolbar.offsetTop
+    };
+  }
+
+  handleDrag(x, y) {
+    // 접힌 상태거나 드래그 중이 아니면 리턴
+    if (this.elements.toolbar.classList.contains('minimized') || !this.isDragging) return;
+
+    let newX = x - this.dragOffset.x;
+    let newY = y - this.dragOffset.y;
+
+    const minVisible = 100;
+    const maxX = window.innerWidth - this.elements.toolbar.offsetWidth + minVisible;
+    const maxY = window.innerHeight - this.elements.toolbar.offsetHeight + minVisible;
+
+    newX = Math.max(-minVisible, Math.min(newX, maxX));
+    newY = Math.max(-minVisible, Math.min(newY, maxY));
+
+    this.elements.toolbar.style.left = `${newX}px`;
+    this.elements.toolbar.style.top = `${newY}px`;
+
+    this.saveToolbarState();
+  }
+
+  handleDragEnd() {
+    this.isDragging = false;
+    this.elements.toolbar.classList.remove('dragging');
+  }
+
+  toggleImageVisibility() {
+    const isHidden = this.elements.overlayImage.style.display === 'none';
+    this.elements.overlayImage.style.display = isHidden ? 'block' : 'none';
+    this.updateVisibilityButton(!isHidden);
+    this.saveToolbarState();
   }
 
   initContainer() {
@@ -95,28 +141,28 @@ export class UIManager {
           yInput: document.getElementById('yInput'),
           scaleInput: document.getElementById('scaleInput')
         };
-  
+
         // 요소 존재 확인
         const requiredElements = [
-          'container', 
-          'overlayImage', 
-          'toolbar', 
+          'container',
+          'overlayImage',
+          'toolbar',
           'toggleButton', ,
-          'opacitySlider', 
+          'opacitySlider',
           'toggleVisibilityButton',
-          'lockButton', 
-          'invertButton', 
-          'xInput', 
-          'yInput', 
+          'lockButton',
+          'invertButton',
+          'xInput',
+          'yInput',
           'scaleInput'
         ];
-  
+
         const missingElements = requiredElements.filter(key => !this.elements[key]);
-  
+
         if (missingElements.length > 0) {
           throw new Error(`Missing elements: ${missingElements.join(', ')}`);
         }
-  
+
         resolve();
       } catch (error) {
         reject(error);
@@ -127,7 +173,7 @@ export class UIManager {
   attachEventListeners() {
     return new Promise((resolve) => {
       const header = this.elements.toolbar.querySelector('.hawkeye-head');
-      
+
       const startDrag = (e) => {
         if (e.target === this.elements.toggleButton) return;
         this.isDragging = true;
@@ -173,9 +219,15 @@ export class UIManager {
       header.addEventListener('mousedown', startDrag);
       document.addEventListener('mousemove', doDrag);
       document.addEventListener('mouseup', endDrag);
-      header.addEventListener('touchstart', startDrag, { passive: true });
-      document.addEventListener('touchmove', doDrag, { passive: false });
-      document.addEventListener('touchend', endDrag, { passive: true });
+      header.addEventListener('touchstart', startDrag, {
+        passive: true
+      });
+      document.addEventListener('touchmove', doDrag, {
+        passive: false
+      });
+      document.addEventListener('touchend', endDrag, {
+        passive: true
+      });
 
       // 토글 버튼 이벤트
       this.elements.toggleButton.addEventListener('click', () => this.toggleToolbar());
@@ -193,19 +245,28 @@ export class UIManager {
   }
 
   toggleToolbar() {
-    const isCollapsed = this.elements.toolbar.classList.toggle('collapsed');
-    this.elements.toggleButton.innerHTML = isCollapsed ? '▲' : '▼';
+    const isMinimized = this.elements.toolbar.classList.toggle('minimized');
+    this.elements.toggleButton.innerHTML = isMinimized ? '▲' : '▼';
+
+    // // 최소화될 때 위치 초기화
+    // if (isMinimized) {
+    //   this.elements.toolbar.style.removeProperty('left');
+    //   this.elements.toolbar.style.removeProperty('top');
+    // }
+
     this.saveToolbarState();
   }
 
   async saveToolbarState() {
+    // 현재 요소가 숨겨진 상태인지 체크
+    const isHidden = this.elements.overlayImage.style.display === 'none';
     const state = {
-      collapsed: this.elements.toolbar.classList.contains('collapsed'),
+      minimized: this.elements.toolbar.classList.contains('minimized'),
       position: {
         left: this.elements.toolbar.style.left,
         top: this.elements.toolbar.style.top
       },
-      isHidden: this.elements.overlayImage.style.display === 'none'
+      isHidden: isHidden
     };
     await this.stateManager.saveToolbarState(state);
   }
@@ -213,14 +274,19 @@ export class UIManager {
   async restoreToolbarState() {
     const state = await this.stateManager.getToolbarState();
     if (state) {
-      if (state.collapsed) {
-        this.elements.toolbar.classList.add('collapsed');
+      // 툴바 최소화 상태 복원
+      if (state.minimized) {
+        this.elements.toolbar.classList.add('minimized');
         this.elements.toggleButton.innerHTML = '▲';
       }
+
+      // 툴바 위치 복원
       if (state.position) {
         this.elements.toolbar.style.left = state.position.left;
         this.elements.toolbar.style.top = state.position.top;
       }
+
+      // 이미지와 토글버튼 상태 복원
       if (state.isHidden !== undefined) {
         this.elements.overlayImage.style.display = state.isHidden ? 'none' : 'block';
         this.updateVisibilityButton(state.isHidden);
@@ -230,34 +296,34 @@ export class UIManager {
 
   updateControls(state) {
     console.log('[UIManager] Updating controls with state:', state);
-    
+
     if (!state) return;
 
     if (state.hasImage) {
-        document.querySelector('.upload-before').style.display = 'none';
-        document.querySelector('.upload-after').style.display = 'flex';
+      document.querySelector('.upload-before').style.display = 'none';
+      document.querySelector('.upload-after').style.display = 'flex';
     }
 
     if (state.opacity !== undefined) {
-        this.elements.opacitySlider.value = state.opacity;
-        this.elements.opacitySlider.disabled = !state.hasImage;
+      this.elements.opacitySlider.value = state.opacity;
+      this.elements.opacitySlider.disabled = !state.hasImage;
     }
 
     if (state.isHidden !== undefined) {
-        this.updateVisibilityButton(state.isHidden);
-        const button = document.getElementById('toggleVisibilityButton');
-        button.innerHTML = state.isHidden ? '🙈' : '🙉';
-        button.classList.toggle('active', state.isHidden);
+      this.updateVisibilityButton(state.isHidden);
+      const button = document.getElementById('toggleVisibilityButton');
+      button.innerHTML = state.isHidden ? '🙈' : '🙉';
+      button.classList.toggle('active', state.isHidden);
     }
 
     if (state.isLocked !== undefined) {
-        const button = document.getElementById('lockButton');
-        button.classList.toggle('active', state.isLocked);
+      const button = document.getElementById('lockButton');
+      button.classList.toggle('active', state.isLocked);
     }
 
     if (state.isInverted !== undefined) {
-        const button = document.getElementById('invertColorButton');
-        button.classList.toggle('active', state.isInverted);
+      const button = document.getElementById('invertColorButton');
+      button.classList.toggle('active', state.isInverted);
     }
 
     console.log('[UIManager] Controls update complete');
@@ -271,7 +337,7 @@ export class UIManager {
     this.elements.opacitySlider.disabled = true;
     this.elements.lockButton.classList.remove('active');
     this.elements.invertButton.classList.remove('active');
-    
+
     document.querySelector('.upload-before').style.display = 'flex';
     document.querySelector('.upload-after').style.display = 'none';
   }
@@ -289,7 +355,7 @@ export class UIManager {
 
   updatePositionInputs(position) {
     if (!position) return;
-    
+
     if (this.elements.xInput) {
       this.elements.xInput.value = Math.round(position.x);
     }
@@ -320,6 +386,7 @@ export class UIManager {
 
   updateLockButton(isLocked) {
     if (this.elements.lockButton) {
+      this.elements.lockButton.innerHTML = isLocked ? '🔒' : '🔓';
       this.elements.lockButton.classList.toggle('active', isLocked);
     }
   }
