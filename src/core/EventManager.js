@@ -52,7 +52,7 @@ export class EventManager {
       }
 
       // 방향키: 이미지 이동
-      if (this.core.hasOverlayImage() && !this.core.isOverlayLocked()) {
+      if (this.core.hasOverlayImage()) {
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
           event.preventDefault();
           this.handleArrowKey(event.key, event.shiftKey);

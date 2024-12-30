@@ -3,6 +3,11 @@
 $toolbar-width: 292px;
 $toolbar-toggle-button-size: 40px;
 
+.hawkeye-locked.moveable-control-box,
+.hawkeye-locked .moveable-control-box {
+  --moveable-color: #999;
+}
+
 #publishingContainer {
   position: absolute;
   top: 0;
@@ -41,7 +46,6 @@ $toolbar-toggle-button-size: 40px;
   line-height: 1.4;
   overflow: hidden;
   z-index: 20000;
-  
 
   &:not(.minimized) {
     .hawkeye-head {
