@@ -386,6 +386,7 @@ export class UIManager {
 
   updateLockButton(isLocked) {
     if (this.elements.lockButton) {
+      this.elements.lockButton.innerHTML = isLocked ? '🔒' : '🔓';
       this.elements.lockButton.classList.toggle('active', isLocked);
     }
   }

@@ -4,8 +4,8 @@ export const toolbarTemplate = `
   <div id="hawkeyeToolbar">
     <div class="hawkeye-head">
       <div class="title-container">
-        <h1 class="hawkeye-title">호크아이 - UI 대조 검토기</h1>
-        <button class="toggle-button">▼</button>
+        <h1 class="hawkeye-title">호크아이 - UI QA Tool</h1>
+        <button class="toggle-button" title="Alt + \`">▼</button>
       </div>
     </div>
     <div class="hawkeye-body">
@@ -17,7 +17,7 @@ export const toolbarTemplate = `
         <button type="button" id="call-markup" class="btn-url-capture" title="캡쳐할 URL">캡쳐 불러오기</button>
       </div>
       <div class="upload-before">
-        <p>이미지 파일을 업로드 하거나,<br> 클립보드 이미지를 Ctrl + V로 붙여넣으세요!</p>
+        <p>이미지 파일을 업로드하거나 <br>클립보드 이미지를 Ctrl + V로 붙여넣으세요!</p>
       </div>
       <div class="upload-after">
         <div class="controller">
@@ -27,9 +27,9 @@ export const toolbarTemplate = `
           </div>
           <div class="button-group">
             <div class="buttons-container">
-              <button id="toggleVisibilityButton" class="btn-toggle" title="이미지 on/off">🙉</button>
-              <button id="lockButton" class="btn-lock" title="잠금 및 해제">🔒</button>
-              <button id="invertColorButton" class="btn-invert" title="색상 반전">🌗</button>
+              <button id="toggleVisibilityButton" class="btn-toggle" title="이미지 on/off\nAlt + V">🙉</button>
+              <button id="lockButton" class="btn-lock" title="마우스 잠금\nAlt + L">🔒</button>
+              <button id="invertColorButton" class="btn-invert" title="색상 반전\nAlt + D">🌗</button>
             </div>
             <div class="buttons-container">
               <button id="top-left" title="왼쪽상단">↖️</button>

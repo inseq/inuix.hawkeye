@@ -10,6 +10,7 @@ export class EventManager {
     this.registerWindowEvents();
     this.registerInputEvents();
     this.registerControlEvents();
+    this.registerToolbarEvents();
   }
 
   registerKeyboardEvents() {
@@ -22,10 +23,31 @@ export class EventManager {
         return;
       }
 
+      // Alt + `: 툴바 토글
+      if (event.altKey && event.key === '`') {
+        event.preventDefault();
+        this.core.managers.ui.toggleToolbar();
+        return;
+      }
+
       // Alt + V: 이미지 토글
       if (event.altKey && event.key.toLowerCase() === 'v') {
         event.preventDefault();
         this.core.toggleOverlayVisibility();
+        return;
+      }
+
+      // Alt + L: 잠금/해제 토글
+      if (event.altKey && event.key.toLowerCase() === 'l') {
+        event.preventDefault();
+        this.core.toggleLockOverlay();
+        return;
+      }
+
+      // Alt + D: 색상 반전 토글
+      if (event.altKey && event.key.toLowerCase() === 'd') {
+        event.preventDefault();
+        this.core.invertOverlayColor();
         return;
       }
 
@@ -141,6 +163,53 @@ export class EventManager {
     });
   }
 
+  registerToolbarEvents() {
+    const ui = this.core.managers.ui;
+    const header = ui.elements.toolbar.querySelector('.hawkeye-head');
+    const toggleButton = ui.elements.toggleButton;
+
+    // 드래그 이벤트
+    const startDrag = (e) => {
+      if (e.target === toggleButton) return;
+      const x = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+      const y = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
+      ui.handleDragStart(x, y);
+    };
+
+    const doDrag = (e) => {
+      e.preventDefault();
+      const x = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+      const y = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
+      ui.handleDrag(x, y);
+    };
+
+    const endDrag = () => {
+      ui.handleDragEnd();
+    };
+
+    // 이벤트 리스너 등록
+    header.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', doDrag);
+    document.addEventListener('mouseup', endDrag);
+    header.addEventListener('touchstart', startDrag, {
+      passive: true
+    });
+    document.addEventListener('touchmove', doDrag, {
+      passive: false
+    });
+    document.addEventListener('touchend', endDrag, {
+      passive: true
+    });
+
+    // 툴바 토글 버튼
+    toggleButton.addEventListener('click', () => ui.toggleToolbar());
+
+    // 이미지 가시성 토글
+    ui.elements.toggleVisibilityButton.addEventListener('click', () => {
+      ui.toggleImageVisibility();
+    });
+  }
+
   registerControlButton(id, handler) {
     const button = document.getElementById(id);
     if (button) {
@@ -155,7 +224,7 @@ export class EventManager {
 
     let top = parseInt(image.style.top) || 0;
     let left = parseInt(image.style.left) || 0;
-    
+
     const moveDistance = isShiftPressed ? 10 : 1;
 
     switch (key) {
@@ -189,7 +258,7 @@ export class EventManager {
         window.removeEventListener(eventName, handler);
       }
     }
-    
+
     this.boundHandlers.clear();
   }
 }
