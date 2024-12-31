@@ -55,9 +55,9 @@ export class ImageOverlay {
       this.moveableInstance.destroy();
     }
   
-    if (!this.image || this.state.isLocked) return;
+    if (!this.image) return;
   
-    // window.Moveable 직접 사용
+    // Moveable 인스턴스 생성
     this.moveableInstance = new window.Moveable(this.container, {
       target: this.image,
       draggable: true,
@@ -65,9 +65,20 @@ export class ImageOverlay {
       resizable: true,
       keepRatio: true,
       origin: false,
-      throttleResize: 0
+      throttleResize: 0,
+      className: this.state.isLocked ? 'hawkeye-locked' : ''
     });
   
+    // 마우스 이벤트만 선택적으로 차단
+    this.moveableInstance.target.addEventListener('mousedown', (e) => {
+      if (this.state.isLocked) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    }, true);
+  
+    // 이미지 드래그 핸들러
     this.moveableInstance.on('drag', ({ target, left, top }) => {
       target.style.left = `${left}px`;
       target.style.top = `${top}px`;
@@ -80,6 +91,7 @@ export class ImageOverlay {
       this.saveState();
     });
   
+    // 이미지 리사이즈 핸들러
     this.moveableInstance.on('resize', ({ target, width, height, drag }) => {
       target.style.width = `${width}px`;
       target.style.height = `${height}px`;
@@ -97,6 +109,18 @@ export class ImageOverlay {
     this.moveableInstance.on('resizeEnd', () => {
       this.saveState();
     });
+  }
+  
+  toggleLock() {
+    if (!this.image || !this.moveableInstance) return;
+  
+    this.state.isLocked = !this.state.isLocked;
+    
+    // UI 스타일만 변경
+    this.moveableInstance.className = this.state.isLocked ? 'hawkeye-locked' : '';
+  
+    this.notifyLockChange();
+    this.saveState();
   }
 
   async displayImage(file, options = {}) {
@@ -297,23 +321,13 @@ export class ImageOverlay {
   }
 
   toggleLock() {
-    if (!this.image) return;
-
+    if (!this.image || !this.moveableInstance) return;
+  
     this.state.isLocked = !this.state.isLocked;
     
-    if (this.state.isLocked) {
-      this.image.style.pointerEvents = 'none';
-      this.image.style.userSelect = 'none';
-      if (this.moveableInstance) {
-        this.moveableInstance.destroy();
-        this.moveableInstance = null;
-      }
-    } else {
-      this.image.style.pointerEvents = 'auto';
-      this.image.style.userSelect = 'auto';
-      this.initializeMoveable();
-    }
-
+    // UI 스타일만 변경 (draggable/resizable은 건드리지 않음)
+    this.moveableInstance.className = this.state.isLocked ? 'hawkeye-locked' : '';
+  
     this.notifyLockChange();
     this.saveState();
   }
@@ -421,10 +435,11 @@ export class ImageOverlay {
 
   async restoreState(state) {
     if (!state || !state.imageBase64) return;
-
+  
     this.isRestoringState = true;
     
     try {
+      // 1. 이미지 로드 및 기본 상태 복원
       const response = await fetch(state.imageBase64);
       const blob = await response.blob();
       const file = new File([blob], 'restored.png', { type: 'image/png' });
@@ -432,66 +447,36 @@ export class ImageOverlay {
       this.currentScale = parseFloat(state.scale) || 1.0;
       await this.displayImage(file, { isRestoringState: true });
       
-      // 상태 복원
+      // 2. 상태 복원
       this.state = { ...state };
       
-      // 이미지 상태 직접 적용
-      this.updatePosition(state.position.x, state.position.y);
-      this.setOpacity(state.opacity);
-      
-      // 이미지에 상태 직접 적용
+      // 3. 이미지 상태 적용
       if (this.image) {
+        // 위치와 투명도
+        this.updatePosition(state.position.x, state.position.y);
+        this.setOpacity(state.opacity);
+  
         // 반전 상태 적용
-        const currentFilter = this.image.style.filter;
-        if (state.isInverted) {
-            this.image.style.filter = currentFilter ? `${currentFilter} invert(1)` : 'invert(1)';
-        } else {
-            this.image.style.filter = currentFilter ? currentFilter.replace('invert(1)', '').trim() : '';
-        }
-
-        // 잠금 상태 적용
-        this.image.style.pointerEvents = state.isLocked ? 'none' : 'auto';
-        this.image.style.userSelect = state.isLocked ? 'none' : 'auto';
-        if (state.isLocked && this.moveableInstance) {
-            this.moveableInstance.destroy();
-            this.moveableInstance = null;
-        } else if (!state.isLocked) {
-            this.initializeMoveable();
-        }
-
+        this.image.style.filter = state.isInverted ? 'invert(1)' : '';
+  
         // 가시성 상태 적용
-        if (state.isHidden) {
-          this.image.style.visibility = 'hidden';
-          // 무버블 요소들도 함께 숨김
-          const moveableElements = document.querySelectorAll(
-              '.moveable-control-box, .moveable-line, .moveable-direction'
-          );
-          moveableElements.forEach((element) => {
-              element.style.visibility = 'hidden';
-          });
-        } else {
-          this.image.style.visibility = 'visible';
-          // 무버블 요소들도 함께 표시
-          const moveableElements = document.querySelectorAll(
-              '.moveable-control-box, .moveable-line, .moveable-direction'
-          );
-          moveableElements.forEach((element) => {
-              element.style.visibility = 'visible';
-          });
-        }
+        this.image.style.visibility = state.isHidden ? 'hidden' : 'visible';
       }
-
-      // UI 업데이트 알림
+  
+      // 4. Moveable 인스턴스 재초기화 (잠금/UI 상태 반영)
+      this.initializeMoveable();
+  
+      // 5. UI 알림
       this.notifyLockChange();
       this.notifyVisibilityChange();
       this.notifyInvertChange();
       
       this.isRestoringState = false;
     } catch (error) {
-        console.error('Failed to restore state:', error);
-        this.isRestoringState = false;
+      console.error('Failed to restore state:', error);
+      this.isRestoringState = false;
     }
-}
+  }
 
   destroy() {
     if (this.moveableInstance) {

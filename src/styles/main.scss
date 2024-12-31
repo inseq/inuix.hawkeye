@@ -1,11 +1,21 @@
 /* main.scss */
 
+$toolbar-width: 292px;
+$toolbar-toggle-button-size: 40px;
+
+.hawkeye-locked.moveable-control-box,
+.hawkeye-locked .moveable-control-box {
+  --moveable-color: #999;
+}
+
 #publishingContainer {
   position: absolute;
   top: 0;
   left: 0;
+  bottom: 0;
   width: 100%;
   z-index: 15000;
+  overflow: hidden;
 
   img {
     all: unset;
@@ -22,7 +32,7 @@
 
 #hawkeyeToolbar {
   position: fixed;
-  width: 272px;
+  width: $toolbar-width;
   top: 0;
   // right: 0;
   left: calc(100vw - #{272px + 12px + 12px + 16px});
@@ -37,6 +47,56 @@
   overflow: hidden;
   z-index: 20000;
 
+  &:not(.minimized) {
+    .hawkeye-head {
+      cursor: grab;
+    }
+  }
+
+  &.minimized {
+    left: auto !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: $toolbar-toggle-button-size;
+    margin-left: $toolbar-width - $toolbar-toggle-button-size + 12px;
+    background: none;
+    box-shadow: none;
+
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: rgba(240, 240, 240, 0.8);
+    }
+
+    .hawkeye-head {
+      height: 40px;
+      padding: 8px;
+      border: none;
+
+      .hawkeye-title {
+        display: none;
+      }
+    }
+
+    .hawkeye-body,
+    .hawkeye-foot {
+      display: none;
+    }
+  }
+
+  &.collapsed {
+    height: 40px;
+
+    .hawkeye-body {
+      display: none;
+    }
+
+    .hawkeye-foot {
+      .copyright {
+        position: static;
+      }
+    }
+  }
+
   div,
   li,
   p {
@@ -45,6 +105,7 @@
 
   a {
     cursor: pointer;
+
     &:hover {
       color: #000;
     }
@@ -59,20 +120,6 @@
   &:not(.uploaded) {
     .upload-after {
       display: none;
-    }
-  }
-
-  &.collapsed {
-    height: 49px;
-
-    .hawkeye-body {
-      display: none;
-    }
-
-    .hawkeye-foot {
-      .copyright {
-        position: static;
-      }
     }
   }
 
@@ -93,14 +140,14 @@
   }
 
   .hawkeye-head {
-    height: 50px;
-    padding: 12px 16px;
+    height: 40px;
+    padding: 4px 8px 4px 16px;
     // border-bottom: 1px solid rgba(255, 255, 255, 0.9);
     border-bottom: 1px solid rgba(#000, 0.1);
-    cursor: grab;
     user-select: none;
 
     display: flex;
+    justify-content: center;
     flex-direction: column;
 
     .title-container {
@@ -120,6 +167,7 @@
     cursor: pointer;
     opacity: 0.7;
     transition: opacity 0.2s;
+    background: none;
 
     &:hover {
       opacity: 1;
@@ -169,7 +217,7 @@
       line-height: 1.2;
       color: #999;
       font-family: Arial, Helvetica, sans-serif;
-  
+
       a {
         color: inherit;
         text-decoration: none;
@@ -197,6 +245,30 @@
 
     a {
       text-decoration: underline;
+    }
+  }
+
+  .url-input-area {
+    display: flex;
+    margin: 0 12px 12px;
+    gap: 8px;
+    font-size: 13px;
+
+    border-radius: 8px;
+    border: 2px dashed #666;
+    padding: 10px;
+
+    .form-control {
+      min-width: 50px;
+      flex: 1 1 auto;
+      background: #fff;
+      padding: 0 12px;
+      border-radius: 4px;
+    }
+
+    .btn-url-capture {
+      flex: 0 0 auto;
+      cursor: pointer;
     }
   }
 
