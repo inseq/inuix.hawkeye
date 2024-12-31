@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="js/html2canvas.min.js"></script>
+<script src="js/es6-promise.auto.js"></script>
+</head>
+<body>
+<script>
+var filename;
+
+document.addEventListener("DOMContentLoaded",function(){
+	filename = window.location.href.substr(window.location.href.lastIndexOf("/") + 1 );
+	fileExt = filename.substr(filename.lastIndexOf(".") + 1);
+	console.log(fileExt);
+	if(fileExt == "html"){
+		fetchHTML(window.location.search); //경로가 html이면 html 변환처리
+	}else{
+		fetchImg(window.location.search); //그외 직접 파일로 처리
+	}
+});
+
+function fetchImg(url) {
+	
+	const urlParams = new URLSearchParams(url);
+	
+		
+	if(urlParams.has("url")){
+		const _url = urlParams.get('url');
+		
+		fetch(_url,{
+			method : "GET",
+		})
+		.then(response => response.blob())
+		.then(blob => {
+		    // HTML을 파싱
+		    const metadata = {type : `image/${fileExt}`};
+		    
+			const file = new File([blob], filename, metadata);
+		    window.opener.fileCall(file);
+		    window.close();
+		  })
+		  .catch(error => console.error('Error loading IMG:', error));
+
+	}
+}
+
+function fetchHTML(url) {
+	
+	const urlParams = new URLSearchParams(url);
+	console.log(urlParams);
+	
+	if(urlParams.has("url")){
+		const _url = urlParams.get('url');
+		console.log(_url);
+
+		fetch(_url)
+		.then(response => response.text())
+		.then(html => {
+		    // HTML을 파싱
+		     const urlOrigin = _url.replace(window.location.origin, "");
+		    const conRoot = urlOrigin.substr(0, urlOrigin.lastIndexOf("/") -1 );
+		   
+		     const updatedHTML = updateHTMLPaths(html, conRoot);
+		     
+		    const parser = new DOMParser();
+		    const doc = parser.parseFromString(updatedHTML, 'text/html');
+		    
+		    const container = document.querySelector('.print-box');
+		    container.innerHTML = doc.head.innerHTML+doc.body.innerHTML;
+		    makeImg();
+		  })
+		  .catch(error => console.error('Error loading HTML:', error));
+
+
+	}
+}
+
+function makeImg(){
+
+    
+	var canvas = document.createElement("canvas");
+    var context = canvas.getContext("2d");
+
+    html2canvas(document.querySelector('.print-box'),{
+    	allowTaint : true
+    	
+    }).then(function(canvas) {
+    	
+		 var imgData = canvas.toDataURL('image/png');
+         var imgWidth = 210; // 이미지 가로 길이(mm) A4 기준
+         var pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
+         var imgHeight = canvas.height * imgWidth / canvas.width;
+         var heightLeft = imgHeight;
+         
+		//$(".img-area").append("<img src='"+imgData+"' />");
+		
+		 var binaryData = atob(imgData.split(',')[1]);
+		  var array = [];
+		
+		  for (var i = 0; i < binaryData.length; i++) {
+		  	array.push(binaryData.charCodeAt(i));
+		  }
+	    const file = new File([new Uint8Array(array)], filename+".png", {type: 'image/png'});
+	    window.opener.fileCall(file);
+		//$(".print-box").empty();
+		window.close();
+	 });
+
+}
+
+function updateHTMLPaths(html, basePath) {
+	var obj = html.replace(/href="([^"]+)"/g, (match, href) => {
+        // 상대 경로를 배열로 변환
+        const relativeParts = href.split('/');
+        // 절대 경로로 변환
+        let resolvedPath = '';
+        
+        if(relativeParts[0].indexOf("http") == -1){
+        	resolvedPath = resolvePath(basePath, relativeParts);
+        }
+        
+        // 경로를 교체한 href 속성 반환
+        return `href=`+resolvedPath;
+    });
+	
+	obj = obj.replace(/src="([^"]+)"/g, (match, src) => {
+        // 상대 경로를 배열로 변환
+        const relativeParts = src.split('/');
+        // 절대 경로로 변환
+ 		let resolvedPath = '';
+        
+        if(relativeParts[0].indexOf("http") == -1){
+        	resolvedPath = resolvePath(basePath, relativeParts);
+        }
+    
+        // 경로를 교체한 href 속성 반환
+        return `src=`+resolvedPath;
+    });
+    return obj;
+}
+
+//함수: 상대 경로를 절대 경로로 변환
+function resolvePath(basePath, relativePath) {
+    // 기본 경로를 배열로 나눔
+    const baseParts = basePath.split('/').filter(part => part !== '');
+    
+    // 상대 경로를 처리
+    relativePath.forEach(part => {
+        if (part === "..") {
+            // 상위 경로 이동: baseParts에서 마지막 경로를 제거
+            baseParts.pop();
+        } else if (part !== ".") {
+            // 현재 경로가 아니면 새 경로 추가
+            baseParts.push(part);
+        }
+    });
+    // 최종 경로 반환
+    return "/" + baseParts.join('/');
+}
+
+</script>
+
+<div class="print-box"></div>
+<div class="img-area"></div>
+
+</body>
+</html>
