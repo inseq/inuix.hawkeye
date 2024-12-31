@@ -69,7 +69,6 @@ function fetchHTML(url) {
 		    
 		    const container = document.querySelector('.print-box');
 		    container.innerHTML = doc.head.innerHTML+doc.body.innerHTML;
-		    
 		    makeImg();
 		  })
 		  .catch(error => console.error('Error loading HTML:', error));
@@ -111,45 +110,17 @@ function makeImg(){
 
 }
 
-function makeImg(){
-
-    
-	var canvas = document.createElement("canvas");
-    var context = canvas.getContext("2d");
-
-    html2canvas(document.querySelector('.print-box'),{
-    	allowTaint : true
-    	
-    }).then(function(canvas) {
-    	
-		 var imgData = canvas.toDataURL('image/png');
-         var imgWidth = 210; // 이미지 가로 길이(mm) A4 기준
-         var pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
-         var imgHeight = canvas.height * imgWidth / canvas.width;
-         var heightLeft = imgHeight;
-         
-		//$(".img-area").append("<img src='"+imgData+"' />");
-		
-		 var binaryData = atob(imgData.split(',')[1]);
-		  var array = [];
-		
-		  for (var i = 0; i < binaryData.length; i++) {
-		  	array.push(binaryData.charCodeAt(i));
-		  }
-	    const file = new File([new Uint8Array(array)], filename+".png", {type: 'image/png'});
-	    window.opener.fileCall(file);
-		//$(".print-box").empty();
-		window.close();
-	 });
-
-}
-
 function updateHTMLPaths(html, basePath) {
 	var obj = html.replace(/href="([^"]+)"/g, (match, href) => {
         // 상대 경로를 배열로 변환
         const relativeParts = href.split('/');
         // 절대 경로로 변환
-        const resolvedPath = resolvePath(basePath, relativeParts);
+        let resolvedPath = '';
+        
+        if(relativeParts[0].indexOf("http") == -1){
+        	resolvedPath = resolvePath(basePath, relativeParts);
+        }
+        
         // 경로를 교체한 href 속성 반환
         return `href=`+resolvedPath;
     });
@@ -158,11 +129,15 @@ function updateHTMLPaths(html, basePath) {
         // 상대 경로를 배열로 변환
         const relativeParts = src.split('/');
         // 절대 경로로 변환
-        const resolvedPath = resolvePath(basePath, relativeParts);
+ 		let resolvedPath = '';
+        
+        if(relativeParts[0].indexOf("http") == -1){
+        	resolvedPath = resolvePath(basePath, relativeParts);
+        }
+    
         // 경로를 교체한 href 속성 반환
         return `src=`+resolvedPath;
     });
-	
     return obj;
 }
 
