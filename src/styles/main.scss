@@ -3,11 +3,6 @@
 $toolbar-width: 292px;
 $toolbar-toggle-button-size: 40px;
 
-.hawkeye-locked.moveable-control-box,
-.hawkeye-locked .moveable-control-box {
-  --moveable-color: #999;
-}
-
 #publishingContainer {
   position: absolute;
   top: 0;
@@ -24,6 +19,27 @@ $toolbar-toggle-button-size: 40px;
   
   * {
     pointer-events: auto !important;
+  }
+
+  #hawkeyeOverlayImage {
+    cursor: grab;
+  }
+
+  // 마우스 잠금 활성화
+  &.hawkeye-locked {
+    #hawkeyeOverlayImage {
+      pointer-events: none !important;
+      cursor: auto !important;
+    }
+    
+    .moveable-control-box {
+      --moveable-color: #999;
+
+      * {
+        pointer-events: none !important;
+        cursor: auto !important;
+      }
+    }
   }
 }
 
@@ -404,16 +420,6 @@ $toolbar-toggle-button-size: 40px;
       background: #333;
       color: #fff;
     }
-  }
-
-  #hawkeyeOverlayImage {
-    position: absolute;
-    top: 0;
-    left: 0;
-    max-width: unset;
-    object-fit: contain;
-    visibility: hidden;
-    cursor: grab;
   }
 
   #stateContainer {

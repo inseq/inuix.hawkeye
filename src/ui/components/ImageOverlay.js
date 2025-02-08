@@ -43,7 +43,6 @@ export class ImageOverlay {
     this.image.style.position = 'absolute';
     this.image.style.maxWidth = 'unset';
     this.image.style.objectFit = 'contain';
-    this.image.style.cursor = 'grab';
     this.image.style.visibility = 'hidden';
     this.image.style.transformOrigin = 'top left';
     
@@ -109,18 +108,6 @@ export class ImageOverlay {
     this.moveableInstance.on('resizeEnd', () => {
       this.saveState();
     });
-  }
-  
-  toggleLock() {
-    if (!this.image || !this.moveableInstance) return;
-  
-    this.state.isLocked = !this.state.isLocked;
-    
-    // UI 스타일만 변경
-    this.moveableInstance.className = this.state.isLocked ? 'hawkeye-locked' : '';
-  
-    this.notifyLockChange();
-    this.saveState();
   }
 
   async displayImage(file, options = {}) {
@@ -327,6 +314,7 @@ export class ImageOverlay {
     
     // UI 스타일만 변경 (draggable/resizable은 건드리지 않음)
     this.moveableInstance.className = this.state.isLocked ? 'hawkeye-locked' : '';
+    this.container.classList.toggle('hawkeye-locked', this.state.isLocked);  // 컨테이너에도 클래스 추가
   
     this.notifyLockChange();
     this.saveState();
@@ -466,7 +454,10 @@ export class ImageOverlay {
       // 4. Moveable 인스턴스 재초기화 (잠금/UI 상태 반영)
       this.initializeMoveable();
   
-      // 5. UI 알림
+      // 5. 컨테이너 잠금 상태 복원
+      this.container.classList.toggle('hawkeye-locked', this.state.isLocked);
+  
+      // 6. UI 알림
       this.notifyLockChange();
       this.notifyVisibilityChange();
       this.notifyInvertChange();
