@@ -16,9 +16,14 @@ $toolbar-toggle-button-size: 40px;
   width: 100%;
   z-index: 15000;
   overflow: hidden;
+  pointer-events: none;
 
   img {
     all: unset;
+  }
+  
+  * {
+    pointer-events: auto !important;
   }
 }
 
