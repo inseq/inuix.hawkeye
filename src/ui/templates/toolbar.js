@@ -13,8 +13,8 @@ export const toolbarTemplate = `
         <input type="file" id="overlayImageInput" accept="image/*" aria-label="오버레이 이미지 선택">
       </div>
       <div class="url-input-area">
-        <input type="text" class="form-control" id="url-val" placeholder="캡쳐할 URL" title="URL 입력">
-        <button type="button" id="call-markup" class="btn-url-capture" title="캡쳐할 URL">캡쳐 불러오기</button>
+        <input type="text" class="form-control" id="url-val" placeholder="예) /html/page.html" title="절대경로 입력">
+        <button type="button" id="call-markup" class="btn-url-capture" title="캡쳐할 URL">캡쳐해오기</button>
       </div>
       <div class="upload-before">
         <p>이미지 파일을 업로드하거나 <br>클립보드 이미지를 Ctrl + V로 붙여넣으세요!</p>
@@ -27,16 +27,16 @@ export const toolbarTemplate = `
           </div>
           <div class="button-group">
             <div class="buttons-container">
-              <button id="toggleVisibilityButton" class="btn-toggle" title="이미지 on/off\nAlt + V">🙉</button>
-              <button id="lockButton" class="btn-lock" title="마우스 잠금\nAlt + L">🔒</button>
-              <button id="invertColorButton" class="btn-invert" title="색상 반전\nAlt + D">🌗</button>
+              <button type="button" id="toggleVisibilityButton" class="btn-toggle" title="가시성 on/off\nAlt + V">🙉</button>
+              <button type="button" id="lockButton" class="btn-lock" title="마우스 잠금\nAlt + L">🔒</button>
+              <button type="button" id="invertColorButton" class="btn-invert" title="색상 반전\nAlt + D">🌗</button>
             </div>
             <div class="buttons-container">
-              <button id="top-left" title="왼쪽상단">↖️</button>
-              <button id="top-right" title="오른쪽상단">↗️</button>
-              <button id="bottom-left" title="왼쪽하단">↙️</button>
-              <button id="bottom-right" title="오른쪽하단">↘️</button>
-              <button id="center" title="너비중앙">⏺️</button>
+              <button type="button" id="top-left" title="왼쪽상단">↖️</button>
+              <button type="button" id="top-right" title="오른쪽상단">↗️</button>
+              <button type="button" id="bottom-left" title="왼쪽하단">↙️</button>
+              <button type="button" id="bottom-right" title="오른쪽하단">↘️</button>
+              <button type="button" id="center" title="너비중앙">⏺️</button>
             </div>
           </div>
           <div id="stateContainer">

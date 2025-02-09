@@ -389,6 +389,7 @@ $toolbar-toggle-button-size: 40px;
 
       button {
         border-radius: 0;
+        cursor: pointer;
 
         +button {
           border-left: 1px solid rgba(255, 255, 255, 0.3);
