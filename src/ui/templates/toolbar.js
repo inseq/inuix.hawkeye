@@ -1,6 +1,6 @@
 const pkg = require('../../../package.json');
 
-export const toolbarTemplate = `
+export const toolbarTemplate = (config) => `
   <div id="hawkeyeToolbar">
     <div class="hawkeye-head">
       <div class="title-container">
@@ -12,9 +12,17 @@ export const toolbarTemplate = `
       <div class="file-upload-area">
         <input type="file" id="overlayImageInput" accept="image/*" aria-label="오버레이 이미지 선택">
       </div>
-      <div class="url-input-area">
-        <input type="text" class="form-control" id="url-val" placeholder="예) /html/page.html" title="절대경로 입력">
-        <button type="button" id="call-markup" class="btn-url-capture" title="캡쳐할 URL">캡쳐해오기</button>
+      <div class="url-input-area" id="natashaArea" style="display: ${config.features.natasha.enabled ? 'flex' : 'none'}">
+        <input type="text" 
+          class="form-control" 
+          id="url-val" 
+          placeholder="예) /demos/example2.html" 
+          title="절대경로 입력"
+          value="${config.defaultState.natashaLastPath || ''}">
+        <button type="button" 
+          id="call-markup" 
+          class="btn-url-capture" 
+          title="캡쳐할 URL">캡쳐해오기</button>
       </div>
       <div class="upload-before">
         <p>이미지 파일을 업로드하거나 <br>클립보드 이미지를 Ctrl + V로 붙여넣으세요!</p>

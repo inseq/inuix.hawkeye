@@ -108,6 +108,36 @@ HawkeyeOverlayTool.initialize({
     - 와일드카드 패턴 지원 (예: 'feature/*')
     - 설정되지 않은 브랜치는 기본적으로 활성화됩니다.
 
+### 2.3 플러그인
+
+호크아이는 플러그인을 통해 기능을 확장할 수 있습니다.
+
+#### 나타샤 플러그인
+
+나타샤는 HTML 페이지를 캡처하여 오버레이하는 플러그인입니다.
+
+```html
+<!-- 나타샤 플러그인 추가 -->
+<script src="https://cdn.jsdelivr.net/gh/inseq/hawkeye-natasha@latest/dist/hawkeye-natasha.min.js"></script>
+
+<script>
+// 나타샤 플러그인 사용
+HawkeyeOverlayTool.use(new NatashaPlugin({
+  timeout: 5000  // 요청 타임아웃 (ms)
+}));
+
+// 호크아이 초기화
+HawkeyeOverlayTool.initialize({
+  enabled: true,
+  plugins: {
+    natasha: {
+      enabled: true
+    }
+  }
+});
+</script>
+```
+
 ## 3. 호크아이 사용하기
 
 화면 우측상단에 호크아이 툴바가 표시됩니다.

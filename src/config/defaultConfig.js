@@ -38,21 +38,37 @@ export const DefaultConfig = {
     toolbar: 'hawkeyeToolbarState'
   },
   
-  // UI 설정 (기존 유지)
+  // UI 설정
   ui: {
     containerId: 'publishingContainer',
     toolbarId: 'hawkeyeToolbar',
-    overlayId: 'hawkeyeOverlayImage'
+    overlayId: 'hawkeyeOverlayImage',
+    natasha: {
+      enabled: true,           // 나타샤 기능 활성화 여부
+      baseUrl: '',            // 나타샤 서버 기본 URL (비어있으면 현재 도메인 사용)
+      allowedPaths: ['*'],    // 허용된 경로 패턴
+      timeout: 5000,          // 요청 타임아웃 (ms)
+    }
   },
   
-  // 기본 상태 (기존 유지)
+  // 기본 상태에 나타샤 관련 상태 추가
   defaultState: {
     opacity: 0.5,
     scale: 1.0,
     position: { x: 0, y: 0 },
     isLocked: false,
     isInverted: false,
-    isHidden: false
+    isHidden: false,
+    natashaLastPath: ''      // 마지막으로 사용한 나타샤 경로 저장
+  },
+
+  features: {
+    natasha: {
+      enabled: false,           // 나타샤 기능 활성화 여부
+      baseUrl: '',            // 나타샤 서버 기본 URL
+      allowedPaths: ['*'],    // 허용된 경로 패턴
+      timeout: 5000,          // 요청 타임아웃 (ms)
+    }
   }
 };
 
@@ -64,7 +80,8 @@ export const ValidationRules = {
     'enabled',
     'ui.containerId',
     'ui.toolbarId',
-    'ui.overlayId'
+    'ui.overlayId',
+    'ui.natasha.enabled'
   ],
   types: {
     'enabled': 'boolean',
@@ -72,6 +89,9 @@ export const ValidationRules = {
     'pms.domain': 'string',
     'ui.containerId': 'string',
     'ui.toolbarId': 'string',
-    'ui.overlayId': 'string'
+    'ui.overlayId': 'string',
+    'ui.natasha.enabled': 'boolean',
+    'ui.natasha.baseUrl': 'string',
+    'ui.natasha.timeout': 'number'
   }
 };

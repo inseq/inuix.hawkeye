@@ -115,14 +115,9 @@ export class UIManager {
     });
   }
 
-  renderToolbar() {
-    return new Promise((resolve) => {
-      const tempContainer = document.createElement('div');
-      tempContainer.innerHTML = toolbarTemplate;
-      document.body.appendChild(tempContainer.firstElementChild);
-      this.elements.toolbar = document.getElementById(this.config.ui.toolbarId);
-      resolve();
-    });
+  async renderToolbar() {
+    const html = toolbarTemplate(this.config);
+    this.elements.container.insertAdjacentHTML('beforeend', html);
   }
 
   initializeElements() {
