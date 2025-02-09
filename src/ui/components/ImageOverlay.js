@@ -451,13 +451,23 @@ export class ImageOverlay {
         this.image.style.visibility = state.isHidden ? 'hidden' : 'visible';
       }
   
-      // 4. Moveable 인스턴스 재초기화 (잠금/UI 상태 반영)
+      // 4. Moveable 인스턴스 재초기화
       this.initializeMoveable();
   
-      // 5. 컨테이너 잠금 상태 복원
+      // 5. Moveable 가시성 상태도 동일한 방식으로 적용
+      if (this.moveableInstance && state.isHidden) {
+        const moveableElements = document.querySelectorAll(
+          '.moveable-control-box, .moveable-line, .moveable-direction'
+        );
+        moveableElements.forEach((element) => {
+          element.style.visibility = 'hidden';
+        });
+      }
+  
+      // 6. 컨테이너 잠금 상태 복원
       this.container.classList.toggle('hawkeye-locked', this.state.isLocked);
   
-      // 6. UI 알림
+      // 7. UI 알림
       this.notifyLockChange();
       this.notifyVisibilityChange();
       this.notifyInvertChange();
